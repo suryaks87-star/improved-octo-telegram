@@ -1,63 +1,77 @@
 from flask import Flask, render_template, request
-import pandas as pd
-import pickle
+import os
+import joblib
+import gdown
 
 app = Flask(__name__)
 
-# Load SVD model
-with open("svd_model.pkl", "rb") as file:
-    svd_model = pickle.load(file)
+# ============================
+# Model Configuration
+# ============================
+MODEL_DIR = "models"
+MODEL_PATH = os.path.join(MODEL_DIR, "svd_modelnn.pkl")
 
-# Load dataset
-books = pd.read_csv("Cleaned_Book_Data.csv")
+# Replace this with your Google Drive File ID
+FILE_ID = "YOUR_GOOGLE_DRIVE_FILE_ID"
 
+DOWNLOAD_URL = f"https://drive.google.com/uc?id={1Ym4XMLzHIy-6Nwz7O3fykZQDfWMG-9tu}"
 
+# ============================
+# Download Model if Not Exists
+# ============================
+if not os.path.exists(MODEL_PATH):
+    print("Model not found.")
+    print("Downloading model from Google Drive...")
+
+    os.makedirs(MODEL_DIR, exist_ok=True)
+
+    gdown.download(DOWNLOAD_URL, MODEL_PATH, quiet=False)
+
+    print("Model downloaded successfully!")
+
+# ============================
+# Load Model
+# ============================
+print("Loading model...")
+model = joblib.load(MODEL_PATH)
+print("Model loaded successfully!")
+
+# ============================
+# Home Page
+# ============================
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
+# ============================
+# Recommendation Route
+# ============================
 @app.route("/recommend", methods=["POST"])
 def recommend():
 
     user_id = int(request.form["user_id"])
 
-    predictions = []
-
-    # Predict rating for every book
-    for isbn in books["ISBN"].unique():
-
-        pred = svd_model.predict(user_id, isbn)
-
-        predictions.append({
-            "ISBN": isbn,
-            "Predicted_Rating": pred.est
-        })
-
-    prediction_df = pd.DataFrame(predictions)
-
-    # Merge with book details
-    recommendation = prediction_df.merge(
-        books[["ISBN", "Book-Title", "Book-Author"]],
-        on="ISBN"
-    )
-
-    recommendation = recommendation.sort_values(
-        by="Predicted_Rating",
-        ascending=False
-    )
-
-    recommendation = recommendation.drop_duplicates(
-        subset="Book-Title"
-    )
-
-    top_books = recommendation.head(10)
+    # ---------------------------------------
+    # Add your recommendation logic here
+    # Example:
+    #
+    # predictions = ...
+    #
+    # return render_template(
+    #     "index.html",
+    #     recommendations=predictions
+    # )
+    # ---------------------------------------
 
     return render_template(
         "index.html",
-        tables=top_books.to_dict(orient="records")
+        recommendations=["Recommendation logic goes here."]
     )
 
 
+# ============================
+# Run App
+# ============================
 if __name__ == "__main__":
     app.run(debug=True)
