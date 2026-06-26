@@ -9,7 +9,7 @@ app = Flask(__name__)
 # MODEL CONFIGURATION
 # ==========================
 MODEL_DIR = "models"
-MODEL_PATH = os.path.join(MODEL_DIR, "svd_model.pkl")
+MODEL_PATH = os.path.join(MODEL_DIR, "svd_modelnn.pkl")
 
 # Google Drive File ID
 FILE_ID = "1Ym4XMLzHIy-6Nwz7O3fykZQDfWMG-9tu"
