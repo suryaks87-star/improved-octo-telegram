@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import os
 import joblib
 import gdown
+import pickle
 
 app = Flask(__name__)
 
