@@ -35,10 +35,10 @@ DATA_PATH = os.path.join(DATA_DIR, "books_metadata.csv")
 MODEL_FILE_ID = "1Ym4XMLzHIy-6Nwz7O3fykZQDfWMG-9tu"
 
 # Replace with your metadata Google Drive File ID
-DATA_FILE_ID = "YOUR_METADATA_FILE_ID"
+DATA_FILE_ID = "1qYTF8uR6kLAzU4ZFd5D5DSL22IoycnWT"
 
-MODEL_URL = f"https://drive.google.com/uc?id={1Ym4XMLzHIy-6Nwz7O3fykZQDfWMG-9tu}"
-DATA_URL = f"https://drive.google.com/uc?id={1qYTF8uR6kLAzU4ZFd5D5DSL22IoycnWT}"
+MODEL_URL = f"https://drive.google.com/uc?id={MODEL_FILE_ID }"
+DATA_URL = f"https://drive.google.com/uc?id={DATA_FILE_ID}"
 
 # ======================================
 # DOWNLOAD FILE FUNCTION
