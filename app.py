@@ -120,7 +120,63 @@ def recommend_books(user_id, top_n=10):
     )
 
     return predictions[:top_n]
+# ======================================
+# RECOMMEND BUTTON
+# ======================================
 
+if st.button("📚 Recommend Books"):
+
+    if user_id <= 0:
+        st.error("Please enter a valid User ID.")
+
+    else:
+
+        with st.spinner("Finding the best books for you..."):
+
+            recommendations = recommend_books(user_id)
+
+        if len(recommendations) == 0:
+            st.warning("No recommendations found.")
+
+        else:
+
+            st.success("Top Recommended Books")
+
+            for i, book in enumerate(recommendations, start=1):
+
+                isbn = book[0]
+                title = book[1]
+                author = book[2]
+                image = book[3]
+                score = round(book[4], 2)
+
+                col1, col2 = st.columns([1, 4])
+
+                with col1:
+
+                    if pd.notna(image) and str(image).startswith("http"):
+                        st.image(image, width=120)
+                    else:
+                        st.write("📕")
+
+                with col2:
+
+                    st.markdown(f"### {i}. {title}")
+
+                    st.write(f"**Author:** {author}")
+
+                    st.write(f"**ISBN:** {isbn}")
+
+                    st.write(f"**Predicted Rating:** ⭐ {score}")
+
+                st.divider()
+
+# ======================================
+# FOOTER
+# ======================================
+
+st.markdown("---")
+st.caption("Book Recommendation System using Surprise SVD")
 st.success("Everything loaded successfully!")
 
 # ======================================
