@@ -5,23 +5,23 @@ import gdown
 
 app = Flask(__name__)
 
-# ============================
-# Model Configuration
-# ============================
+# ==========================
+# MODEL CONFIGURATION
+# ==========================
 MODEL_DIR = "models"
-MODEL_PATH = os.path.join(MODEL_DIR, "svd_modelnn.pkl")
+MODEL_PATH = os.path.join(MODEL_DIR, "svd_model.pkl")
 
-# Replace this with your Google Drive File ID
-FILE_ID = "YOUR_GOOGLE_DRIVE_FILE_ID"
+# Google Drive File ID
+FILE_ID = "1Ym4XMLzHIy-6Nwz7O3fykZQDfWMG-9tu"
 
-DOWNLOAD_URL = f"https://drive.google.com/uc?id={1Ym4XMLzHIy-6Nwz7O3fykZQDfWMG-9tu}"
+# Download URL
+DOWNLOAD_URL = f"https://drive.google.com/uc?id={FILE_ID}"
 
-# ============================
-# Download Model if Not Exists
-# ============================
+# ==========================
+# DOWNLOAD MODEL IF NEEDED
+# ==========================
 if not os.path.exists(MODEL_PATH):
-    print("Model not found.")
-    print("Downloading model from Google Drive...")
+    print("Model not found. Downloading...")
 
     os.makedirs(MODEL_DIR, exist_ok=True)
 
@@ -29,49 +29,54 @@ if not os.path.exists(MODEL_PATH):
 
     print("Model downloaded successfully!")
 
-# ============================
-# Load Model
-# ============================
+# ==========================
+# LOAD MODEL
+# ==========================
 print("Loading model...")
 model = joblib.load(MODEL_PATH)
 print("Model loaded successfully!")
 
-# ============================
-# Home Page
-# ============================
+# ==========================
+# HOME PAGE
+# ==========================
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# ============================
-# Recommendation Route
-# ============================
+# ==========================
+# RECOMMENDATION PAGE
+# ==========================
 @app.route("/recommend", methods=["POST"])
 def recommend():
 
+    # Example input
     user_id = int(request.form["user_id"])
 
-    # ---------------------------------------
-    # Add your recommendation logic here
+    # ----------------------------------------------------
+    # Replace this section with YOUR recommendation logic
     # Example:
     #
-    # predictions = ...
+    # recommendations = get_recommendations(user_id)
     #
-    # return render_template(
-    #     "index.html",
-    #     recommendations=predictions
-    # )
-    # ---------------------------------------
+    # ----------------------------------------------------
+
+    recommendations = [
+        "Book 1",
+        "Book 2",
+        "Book 3",
+        "Book 4",
+        "Book 5"
+    ]
 
     return render_template(
         "index.html",
-        recommendations=["Recommendation logic goes here."]
+        recommendations=recommendations
     )
 
 
-# ============================
-# Run App
-# ============================
+# ==========================
+# RUN APPLICATION
+# ==========================
 if __name__ == "__main__":
     app.run(debug=True)
