@@ -1,10 +1,14 @@
-from flask import Flask, render_template, request
 import os
 import joblib
 import gdown
-import pickle
+import streamlit as st
 
-app = Flask(__name__)
+# ==========================
+# PAGE CONFIG
+# ==========================
+st.set_page_config(page_title="Book Recommendation System")
+
+st.title("📚 Book Recommendation System")
 
 # ==========================
 # MODEL CONFIGURATION
@@ -12,56 +16,48 @@ app = Flask(__name__)
 MODEL_DIR = "models"
 MODEL_PATH = os.path.join(MODEL_DIR, "svd_modelnn.pkl")
 
-# Google Drive File ID
 FILE_ID = "1Ym4XMLzHIy-6Nwz7O3fykZQDfWMG-9tu"
-
-# Download URL
 DOWNLOAD_URL = f"https://drive.google.com/uc?id={FILE_ID}"
 
 # ==========================
-# DOWNLOAD MODEL IF NEEDED
+# DOWNLOAD MODEL
 # ==========================
 if not os.path.exists(MODEL_PATH):
-    print("Model not found. Downloading...")
+
+    st.info("Downloading model...")
 
     os.makedirs(MODEL_DIR, exist_ok=True)
 
     gdown.download(DOWNLOAD_URL, MODEL_PATH, quiet=False)
 
-    print("Model downloaded successfully!")
+    st.success("Model downloaded!")
 
 # ==========================
 # LOAD MODEL
 # ==========================
-print("Loading model...")
-model = joblib.load(MODEL_PATH)
-print("Model loaded successfully!")
+@st.cache_resource
+def load_model():
+    return joblib.load(MODEL_PATH)
+
+model = load_model()
+
+st.success("Model Loaded Successfully!")
 
 # ==========================
-# HOME PAGE
+# USER INPUT
 # ==========================
-@app.route("/")
-def home():
-    return render_template("index.html")
-
+user_id = st.number_input(
+    "Enter User ID",
+    min_value=1,
+    step=1
+)
 
 # ==========================
-# RECOMMENDATION PAGE
+# RECOMMEND BUTTON
 # ==========================
-@app.route("/recommend", methods=["POST"])
-def recommend():
+if st.button("Recommend Books"):
 
-    # Example input
-    user_id = int(request.form["user_id"])
-
-    # ----------------------------------------------------
-    # Replace this section with YOUR recommendation logic
-    # Example:
-    #
-    # recommendations = get_recommendations(user_id)
-    #
-    # ----------------------------------------------------
-
+    # Replace with your recommendation function
     recommendations = [
         "Book 1",
         "Book 2",
@@ -70,14 +66,7 @@ def recommend():
         "Book 5"
     ]
 
-    return render_template(
-        "index.html",
-        recommendations=recommendations
-    )
+    st.subheader("Recommended Books")
 
-
-# ==========================
-# RUN APPLICATION
-# ==========================
-if __name__ == "__main__":
-    app.run(debug=True)
+    for book in recommendations:
+        st.write("✅", book)
