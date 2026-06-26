@@ -75,6 +75,51 @@ def load_books():
     return pd.read_csv(DATA_PATH)
 
 books_df = load_books()
+books_df.columns = [
+    c.replace("-", "_").replace(" ", "_")
+    for c in books_df.columns
+]
+# ======================================
+# RECOMMENDATION FUNCTION
+# ======================================
+
+def recommend_books(user_id, top_n=10):
+
+    predictions = []
+
+    progress = st.progress(0)
+
+    total_books = len(books_df)
+
+    for i, row in enumerate(books_df.itertuples(index=False)):
+
+        try:
+            pred = model.predict(user_id, row.ISBN)
+
+            predictions.append(
+                (
+                    row.ISBN,
+                    row._asdict().get("Book-Title", getattr(row, "Book_Title", "")),
+                    row._asdict().get("Book-Author", getattr(row, "Book_Author", "")),
+                    row._asdict().get("Image-URL-L", getattr(row, "Image_URL_L", "")),
+                    pred.est
+                )
+            )
+
+        except Exception:
+            pass
+
+        if i % 500 == 0:
+            progress.progress(min((i + 1) / total_books, 1.0))
+
+    progress.empty()
+
+    predictions.sort(
+        key=lambda x: x[4],
+        reverse=True
+    )
+
+    return predictions[:top_n]
 
 st.success("Everything loaded successfully!")
 
