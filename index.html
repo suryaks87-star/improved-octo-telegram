@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Recommendation System</title>
+</head>
+<body>
+
+<h2>Book Recommendation System</h2>
+
+<form action="/recommend" method="post">
+
+    <label>User ID</label>
+
+    <input type="number" name="user_id" required>
+
+    <input type="submit" value="Recommend">
+
+</form>
+
+{% if tables %}
+
+<h3>Recommended Books</h3>
+
+<table border="1">
+
+<tr>
+
+<th>Book Title</th>
+
+<th>Author</th>
+
+<th>Predicted Rating</th>
+
+</tr>
+
+{% for row in tables %}
+
+<tr>
+
+<td>{{row['Book-Title']}}</td>
+
+<td>{{row['Book-Author']}}</td>
+
+<td>{{"%.2f"|format(row['Predicted_Rating'])}}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endif %}
+
+</body>
+</html>
